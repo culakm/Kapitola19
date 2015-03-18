@@ -1,39 +1,61 @@
 package com.hellbilling.kapitola19;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.provider.ContactsContract.Contacts;
+import android.view.View;
+import android.widget.Button;
 
-
-public class Activity2 extends ActionBarActivity {
+public class Activity2 extends Activity {
+    static final int PICK_REQUEST=1337;
+    Button viewButton=null;
+    Uri contact=null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activity2);
-    }
+        setContentView(R.layout.activity_activity1);
 
+        viewButton=(Button)findViewById(R.id.view);
+        restoreMe();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_activity2, menu);
-        return true;
+        viewButton.setEnabled(contact!=null);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode==PICK_REQUEST) {
+            if (resultCode==RESULT_OK) {
+                contact=data.getData();
+                viewButton.setEnabled(true);
+            }
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    public void pickContact(View v) {
+        Intent i=new Intent(Intent.ACTION_PICK,
+                Contacts.CONTENT_URI);
+
+        startActivityForResult(i, PICK_REQUEST);
+    }
+
+    public void viewContact(View v) {
+        startActivity(new Intent(Intent.ACTION_VIEW, contact));
+    }
+
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        return(contact);
+    }
+
+    private void restoreMe() {
+        contact=null;
+
+        if (getLastNonConfigurationInstance()!=null) {
+            contact=(Uri)getLastNonConfigurationInstance();
+        }
     }
 }

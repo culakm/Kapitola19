@@ -3,6 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_activity1">Activity1</string>
-    <string name="title_activity_activity2">Activity2</string>
+    <string name="title_activity_activity1">Otacanie s ulozenim stavu cez bundle</string>
+    <string name="title_activity_activity2">Otacanie s ulozenim stavu cez objekt a so zamknutym portraitom</string>
 </resources>
